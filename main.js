@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron')
 
+
 try {
   require('electron-reloader')(module, {
       debug: true,

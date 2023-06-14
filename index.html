@@ -16,8 +16,16 @@
     <title>Bonjour depuis le rendu d'Electron !</title>
   </head>
   <body>
-    <h1>Bonjour depuis le rendu d'Electron de poney !</h1>
-    <p>👋</p>
+    <h1>Alerte concours poney !</h1>
+    <form id="monFormulaire">
+      <label for="concours">Indiquez le numéro de concours :</label>
+      <input id="concours" name="concours" />
+      <br>
+      <label for="epreuves">Quelles sont les épreuves à surveiller ?</label>
+      <input id="epreuves" name="epreuves" />
+      <br>
+      <input type="submit" value="Envoyer !" />
+    </form>
     <div id="externalContent"></div>
     <script type="text/javascript" src="./index.js"></script>
   </body>

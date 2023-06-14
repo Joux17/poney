@@ -1,6 +1,12 @@
 // const prompt = require('custom-electron-prompt')
 
+let intervalId;
+
+
+
 async function afficheEpreuves(concours, epreuvesSouhaitees) {
+    // on vide la div en cas d'une précédente recherche
+    document.getElementById('externalContent').innerHTML = "";
     // appel de la ressource
     const URL = `https://ffecompet.ffe.com/concours/${concours}/programme`
     const response = await fetch(URL);
@@ -15,7 +21,13 @@ async function afficheEpreuves(concours, epreuvesSouhaitees) {
 
     // Affichage uniquement des épreuves renseignées dans le formulaire
     for (numeroEpreuve of epreuvesSouhaitees) {
-        document.getElementById('externalContent').append(epreuvesConcours[parseInt(numeroEpreuve, 10) - 1]);
+        let div = document.createElement("div");
+        const placesRestantes = epreuvesConcours[parseInt(numeroEpreuve, 10) - 1].children[4].innerHTML;
+        div.append(`Epreuve n° ${numeroEpreuve} - ${placesRestantes} place(s) restante(s).\n`)
+        document.getElementById('externalContent').append(div);
+        if(placesRestantes !=0) {
+            alert(`Place disponible pour l'épreuve : ${numeroEpreuve}`);
+        }
     }
 
 }
@@ -23,12 +35,13 @@ async function afficheEpreuves(concours, epreuvesSouhaitees) {
 
 async function main() {
     const form = document.getElementById("monFormulaire");
-
     // On ajoute un gestionnaire d'évènement 'submit'
     form.addEventListener("submit", (event) => {
         event.preventDefault();
-        document.getElementById('externalContent').innerHTML = ""; // on vide la div en cas d'une précédente recherche
-        afficheEpreuves(form.concours.value, form.epreuves.value.split(',')); 
+        afficheEpreuves(form.concours.value, form.epreuves.value.split(','));
+        clearInterval(intervalId);
+       
+        intervalId = setInterval(afficheEpreuves, 60_000, form.concours.value, form.epreuves.value.split(','));
     });
 
 }

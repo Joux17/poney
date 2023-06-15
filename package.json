@@ -1,7 +1,7 @@
 {
-  "name": "my-electron-app",
+  "name": "concours-poney",
   "version": "1.0.0",
-  "description": "Hello World!",
+  "description": "Application d'alerting en cas de places disponible dans un concours de la FFE",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "author": "Jane Doe",
+  "author": "Thomas Fajoux",
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^6.1.1",

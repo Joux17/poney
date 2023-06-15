@@ -1,14 +1,12 @@
 // const prompt = require('custom-electron-prompt')
-
+// import { shell } from "electron";
 let intervalId;
-
-
 
 async function afficheEpreuves(concours, epreuvesSouhaitees) {
     // on vide la div en cas d'une précédente recherche
     document.getElementById('externalContent').innerHTML = "";
     // appel de la ressource
-    const URL = `https://ffecompet.ffe.com/concours/${concours}/programme`
+    const URL = `https://ffecompet.ffe.com/concours/${concours.trim()}/programme`
     const response = await fetch(URL);
 
     // Mise en forme de reponse
@@ -27,6 +25,8 @@ async function afficheEpreuves(concours, epreuvesSouhaitees) {
         document.getElementById('externalContent').append(div);
         if(placesRestantes !=0) {
             alert(`Place disponible pour l'épreuve : ${numeroEpreuve}`);
+            // shell.openExternal("http://www.google.com")
+            clearInterval(intervalId);
         }
     }
 
@@ -41,7 +41,7 @@ async function main() {
         afficheEpreuves(form.concours.value, form.epreuves.value.split(','));
         clearInterval(intervalId);
        
-        intervalId = setInterval(afficheEpreuves, 60_000, form.concours.value, form.epreuves.value.split(','));
+        intervalId = setInterval(afficheEpreuves, 600_000, form.concours.value, form.epreuves.value.split(','));
     });
 
 }

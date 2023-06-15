@@ -1,6 +1,5 @@
 const { app, BrowserWindow } = require('electron')
 
-
 try {
   require('electron-reloader')(module, {
       debug: true,
@@ -15,7 +14,7 @@ const createWindow = () => {
   })
 
   win.loadFile('index.html');
-  win.webContents.openDevTools()
+  win.webContents.openDevTools(); // TODO désactiver pour version hors developpement
 }
 
 app.whenReady().then(() => {

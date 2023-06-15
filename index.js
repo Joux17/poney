@@ -1,5 +1,5 @@
-// const prompt = require('custom-electron-prompt')
 // import { shell } from "electron";
+
 let intervalId;
 
 async function afficheEpreuves(concours, epreuvesSouhaitees) {
@@ -21,10 +21,10 @@ async function afficheEpreuves(concours, epreuvesSouhaitees) {
     for (numeroEpreuve of epreuvesSouhaitees) {
         let div = document.createElement("div");
         const placesRestantes = epreuvesConcours[parseInt(numeroEpreuve, 10) - 1].children[4].innerHTML;
-        div.append(`Epreuve n° ${numeroEpreuve} - ${placesRestantes} place(s) restante(s).\n`)
+        div.append(`Epreuve n° ${numeroEpreuve} - ${placesRestantes} place(s) restante(s).\n`);
         document.getElementById('externalContent').append(div);
         if(placesRestantes !=0) {
-            alert(`Place disponible pour l'épreuve : ${numeroEpreuve}`);
+            alert(`Place disponible pour l'épreuve ${numeroEpreuve}`);
             // shell.openExternal("http://www.google.com")
             clearInterval(intervalId);
         }

@@ -17,18 +17,21 @@
     <title>Vive le cheval !</title>
   </head>
   <body>
-    <h1>Alerte concours poney !</h1>
-    <form id="monFormulaire">
-      <label for="concours">Indiquez le numéro de concours :</label>
-      <input id="concours" name="concours" />
+    <div class="card">
+      <h1>Alerte concours poney !</h1>
+      <form id="monFormulaire">
+        <label for="concours">Indiquez le numéro de concours :</label>
+        <input id="concours" name="concours" />
+        <br>
+        <label for="epreuves">Quelles sont les épreuves à surveiller ?</label>
+        <input id="epreuves" name="epreuves" />
+        <br>
+        <input type="submit" value="Envoyer !" />
+      </form>
       <br>
-      <label for="epreuves">Quelles sont les épreuves à surveiller ?</label>
-      <input id="epreuves" name="epreuves" />
-      <br>
-      <input type="submit" value="Envoyer !" />
-    </form>
-    <br>
-    <div id="externalContent"></div>
+      <div id="externalContent"></div>
+    </div>
+    
     <script type="text/javascript" src="./index.js"></script>
   </body>
 </html>

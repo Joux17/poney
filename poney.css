@@ -1,9 +1,18 @@
 body {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.card {
+    display: flex;
     flex-direction: column;
     width: 50%;
     margin: auto;
-    border: 1px black solid;
+    border: 1px rgba(0,0,0,.1)  solid;
+    border-radius: .5rem;
+    box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
 }
 
 h1 {

@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, webContents } = require('electron')
+const { shell } = require('electron');
 
 try {
   require('electron-reloader')(module, {
@@ -14,7 +15,9 @@ const createWindow = () => {
   })
 
   win.loadFile('index.html');
-  win.webContents.openDevTools(); // TODO désactiver pour version hors developpement
+  if(!app.isPackaged) {
+    win.webContents.openDevTools();
+  }
 }
 
 app.whenReady().then(() => {

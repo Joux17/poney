@@ -26,7 +26,7 @@ form {
     margin: auto;
 }
 
-#externalContent {
+#infos-epreuves-concours {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,30 +1,40 @@
-// import { shell } from "electron";
+let intervalId; // Permet d'identifier le setInterval en cours et de l'annuler plus facilement
 
-let intervalId;
+main();
 
-async function afficheEpreuves(concours, epreuvesSouhaitees) {
+async function main() {
+    const form = document.getElementById("monFormulaire");
+    // On ajoute un gestionnaire d'évènement 'submit'
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        afficherEpreuves(form.concours.value, form.epreuves.value.split(','));
+        clearInterval(intervalId); // Stop un éventuel ancien setInterval
+       
+        intervalId = setInterval(afficherEpreuves, 600_000, form.concours.value, form.epreuves.value.split(','));
+    });
+
+}
+
+async function afficherEpreuves(concours, epreuvesSouhaitees) {
     // on vide la div en cas d'une précédente recherche
-    document.getElementById('externalContent').innerHTML = "";
-    // appel de la ressource
-    const URL = `https://ffecompet.ffe.com/concours/${concours.trim()}/programme`
-    const response = await fetch(URL);
+    document.getElementById('reponseConcours').innerHTML = "";
 
-    // Mise en forme de reponse
-    const pageText = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(pageText, "text/html");
+    const reponse = await appelFFE(concours)
 
+    const documentReponse = await miseEnFormeReponse(reponse);
+   
     // Sélection de la NodeList lié aux épreuves
-    const epreuvesConcours = doc.body.querySelectorAll("tr[class=cv_liste_ligne_0]");
+    const epreuvesConcours = documentReponse.body.querySelectorAll("tr[class=cv_liste_ligne_0]");
 
     // Affichage uniquement des épreuves renseignées dans le formulaire
-    for (numeroEpreuve of epreuvesSouhaitees) {
-        let div = document.createElement("div");
-        const placesRestantes = epreuvesConcours[parseInt(numeroEpreuve, 10) - 1].children[4].innerHTML;
-        div.append(`Epreuve n° ${numeroEpreuve} - ${placesRestantes} place(s) restante(s).\n`);
-        document.getElementById('externalContent').append(div);
+    for (numeroEpreuveSouhaitee of epreuvesSouhaitees) {
+        // L'information des places se trouve dans le children[4]
+        const placesRestantes = epreuvesConcours[parseInt(numeroEpreuveSouhaitee, 10) - 1].children[4].innerHTML;
+        
+        afficherPlacesConcours(document, numeroEpreuveSouhaitee, placesRestantes);
+        
         if(placesRestantes !=0) {
-            alert(`Place disponible pour l'épreuve ${numeroEpreuve}`);
+            alert(`Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`);
             // shell.openExternal("http://www.google.com")
             clearInterval(intervalId);
         }
@@ -32,18 +42,19 @@ async function afficheEpreuves(concours, epreuvesSouhaitees) {
 
 }
 
-
-async function main() {
-    const form = document.getElementById("monFormulaire");
-    // On ajoute un gestionnaire d'évènement 'submit'
-    form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        afficheEpreuves(form.concours.value, form.epreuves.value.split(','));
-        clearInterval(intervalId);
-       
-        intervalId = setInterval(afficheEpreuves, 600_000, form.concours.value, form.epreuves.value.split(','));
-    });
-
+async function appelFFE(concours) {
+    const URL = `https://ffecompet.ffe.com/concours/${concours.trim()}/programme`
+    return await fetch(URL);
 }
 
-main();
+async function miseEnFormeReponse(reponse) {
+    const pageText = await reponse.text();
+    const parser = new DOMParser();
+    return parser.parseFromString(pageText, "text/html");
+}
+
+function afficherPlacesConcours(document, numeroEpreuveSouhaitee, placesRestantes) {
+    let div = document.createElement("div");
+    div.append(`Epreuve n° ${numeroEpreuveSouhaitee} - ${placesRestantes} place(s) restante(s).\n`);
+    document.getElementById('reponseConcours').append(div);
+}

@@ -1,37 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
 
-    <!--<meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />-->
-    <link rel="stylesheet" href="poney.css">
-    <title>Vive le cheval !</title>
-  </head>
-  <body>
-    <div class="card">
+<head>
+  <meta charset="UTF-8" />
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
+
+  <link rel="stylesheet" href="poney.css">
+  <title>Vive le cheval !</title>
+</head>
+
+<body>
+  <div class="card">
+    <div class="header">
       <h1>Alerte concours poney !</h1>
-      <form id="monFormulaire">
-        <label for="concours">Indiquez le numéro de concours :</label>
-        <input id="concours" name="concours" />
-        <br>
-        <label for="epreuves">Quelles sont les épreuves à surveiller ?</label>
-        <input id="epreuves" name="epreuves" />
-        <br>
-        <input type="submit" value="Envoyer !" />
-      </form>
-      <br>
-      <div id="externalContent"></div>
+      <div class="led">
+        <div id="led-green"></div>
+        <div id="led-red"></div>
+      </div>
     </div>
-    
-    <script type="text/javascript" src="./index.js"></script>
-  </body>
+    <form id="formulairePoney">
+      <div class="input-concours p-t-b-10">
+        <label for="concours">Indiquez le numéro de concours :</label>
+        <input type="text" id="concours" name="concours" placeholder="202317016"/>
+      </div>
+      <div class="input-concours p-t-b-10">
+        <label for="epreuves">Quelles sont les épreuves à surveiller ?</label>
+        <input type="text" id="epreuves" name="epreuves" placeholder="1,2,3"/>
+      </div>
+
+      <div>
+        <input type="checkbox" id="notification" name="notification" checked>
+        <label for="notification">Notification activée</label>
+      </div>
+      <div>
+        <input type="checkbox" id="envoiMail" name="envoiMail" checked />
+        <label for="envoiMail">Envoi mail activé</label>
+      </div>
+      <input type="submit" value="Lancer !" class="bouton" />
+    </form>
+    <br>
+    <div class="p-t-b-10" id="infos-epreuves-concours"></div>
+
+  </div>
+
+  <script type="text/javascript" src="./renderer.js"></script>
+</body>
+
 </html>

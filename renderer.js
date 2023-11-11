@@ -2,7 +2,22 @@ const { ipcRenderer } = require("electron");
 
 let intervalId; // Utiliser pour pouvoir stopper la fonction setInterval() une fois que des places se sont libérées dans une épreuve.
 
-async function afficheEpreuves(concours, epreuvesSouhaitees) {
+main();
+
+async function main() {
+    const form = document.getElementById("formulairePoney");
+    // On ajoute un gestionnaire d'évènement 'submit'
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        afficherEpreuves(form.concours.value, form.epreuves.value.split(','));
+        arreterRequete();
+
+        intervalId = setInterval(afficherEpreuves, 600_000, form.concours.value, form.epreuves.value.split(','));
+
+    });
+}
+
+async function afficherEpreuves(concours, epreuvesSouhaitees) {
     // on vide la div contenant les infos des épreuves au cas où une précédente recherche a eu lieu.
     document.getElementById('infos-epreuves-concours').innerHTML = "";
 
@@ -15,11 +30,11 @@ async function afficheEpreuves(concours, epreuvesSouhaitees) {
     const epreuvesConcours = documentConcours.body.querySelectorAll("tr[class=cv_liste_ligne_0]");
     
     // Affichage uniquement des épreuves renseignées dans le formulaire
-    for (numeroEpreuve of epreuvesSouhaitees) {
+    for (numeroEpreuveSouhaitee of epreuvesSouhaitees) {
         // Le premier élément du tableau étant à 0, on doit décrément de 1 pour tomber sur l'épreuve désirée.
         // Ex. : l'épreuve souhaitée est la 6. On veut donc dans le tableau des épreuves globales l'élément qui est au 5ième rang.
         // L'information sur les places restantes à l'épreuve sont ensuite dans l'élément children à l'index 4.
-        let epreuve = epreuvesConcours[parseInt(numeroEpreuve, 10) - 1];
+        let epreuve = epreuvesConcours[parseInt(numeroEpreuveSouhaitee, 10) - 1];
         if(epreuve == null || epreuve == undefined) {
             arreterRequete();
             ouvrirFenetreAvertissement("Etes-vous sur de l'épreuve renseignée ?");
@@ -31,25 +46,26 @@ async function afficheEpreuves(concours, epreuvesSouhaitees) {
         const placesRestantes = epreuve.children[4].innerHTML === '-' ? 0 : epreuve.children[4].innerHTML;
 
         // Création d'une div contenant les informations de l'épreuve que l'on va ensuite ajouter à l'élément 'infos-epreuves-concours' afin de l'afficher à l'écran
-        let div = document.createElement("div");
-        div.append(`Epreuve n° ${numeroEpreuve} - ${placesRestantes} place(s) restante(s).\n`);
-        document.getElementById('infos-epreuves-concours').append(div);
+        afficherPlacesConcours(document, numeroEpreuveSouhaitee, placesRestantes);
+        
 
-        if (placesRestantes != 0) {
+        if(!isNaN(parseInt(placesRestantes)) 
+            && placesRestantes !== 0
+        ) {
             const nomConcours = documentConcours.getElementsByClassName("boite TEnteteConcours")[0].getElementsByClassName("top")[0].getElementsByClassName("left")[0].innerText.split('- ').pop()
 
             const notificationActivee = document.querySelector('#notification').checked;
 
             const envoiMailActive = document.querySelector('#envoiMail').checked;
 
-			ouvrirFenetreAvertissement(`Place disponible pour l'épreuve ${numeroEpreuve}`);
+			ouvrirFenetreAvertissement(`Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`);
 
             if (envoiMailActive) {
-                ipcRenderer.send("place-disponible", url, numeroEpreuve); // Permet d'envoyer un 'event' avec un contenu au `main.js` afin de déclencher l'action d'envoi de mail
+                ipcRenderer.send("place-disponible", url, numeroEpreuveSouhaitee); // Permet d'envoyer un 'event' avec un contenu au `main.js` afin de déclencher l'action d'envoi de mail
             }
 
             if (notificationActivee) {
-                afficherNotificationPlace(nomConcours, numeroEpreuve);
+                afficherNotificationPlace(nomConcours, numeroEpreuveSouhaitee);
             }
 
             arreterRequete();
@@ -84,23 +100,10 @@ function ouvrirFenetreAvertissement(message) {
 }
 
 // Permet l'affichage d'une notification OS
-function afficherNotificationPlace(concours, numeroEpreuve) {
+function afficherNotificationPlace(concours, numeroEpreuveSouhaitee) {
     const NOTIFICATION_TITLE = `Concours Poney ${concours}`;
-    const NOTIFICATION_BODY = `Place disponible pour l'épreuve ${numeroEpreuve}`;
+    const NOTIFICATION_BODY = `Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`;
     new window.Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY });
-}
-
-async function main() {
-    const form = document.getElementById("formulairePoney");
-    // On ajoute un gestionnaire d'évènement 'submit'
-    form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        afficheEpreuves(form.concours.value, form.epreuves.value.split(','));
-        arreterRequete();
-
-        intervalId = setInterval(afficheEpreuves, 600_000, form.concours.value, form.epreuves.value.split(','));
-
-    });
 }
 
 function allumerLed() {
@@ -118,4 +121,8 @@ function arreterRequete() {
     eteindreLed();
 }
 
-main();
+function afficherPlacesConcours(document, numeroEpreuveSouhaitee, placesRestantes) {
+    let div = document.createElement("div");
+    div.append(`Epreuve n° ${numeroEpreuveSouhaitee} - ${placesRestantes} place(s) restante(s).\n`);
+    document.getElementById('infos-epreuves-concours').append(div);
+}

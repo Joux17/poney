@@ -69,7 +69,7 @@ app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") app.quit();
 });
 
-// Déclenche l'action quand l'index.js émet l'événement "place-disponible"
+// Déclenche l'action quand le renderer.js émet l'événement "place-disponible"
 ipcMain.on("place-disponible", (_, url, numeroEpreuve) => {
 	shell.openExternal(url);
 	envoiMail(url, numeroEpreuve);

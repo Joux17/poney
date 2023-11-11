@@ -17,7 +17,7 @@ async function main() {
 
 async function afficherEpreuves(concours, epreuvesSouhaitees) {
     // on vide la div en cas d'une précédente recherche
-    document.getElementById('reponseConcours').innerHTML = "";
+    document.getElementById('infos-epreuves-concours').innerHTML = "";
 
     const reponse = await appelFFE(concours)
 
@@ -33,7 +33,7 @@ async function afficherEpreuves(concours, epreuvesSouhaitees) {
         
         afficherPlacesConcours(document, numeroEpreuveSouhaitee, placesRestantes);
         
-        if(placesRestantes !=0) {
+        if(!isNaN(parseInt(placesRestantes)) && placesRestantes !== 0) {
             alert(`Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`);
             // shell.openExternal("http://www.google.com")
             clearInterval(intervalId);
@@ -56,5 +56,5 @@ async function miseEnFormeReponse(reponse) {
 function afficherPlacesConcours(document, numeroEpreuveSouhaitee, placesRestantes) {
     let div = document.createElement("div");
     div.append(`Epreuve n° ${numeroEpreuveSouhaitee} - ${placesRestantes} place(s) restante(s).\n`);
-    document.getElementById('reponseConcours').append(div);
+    document.getElementById('infos-epreuves-concours').append(div);
 }

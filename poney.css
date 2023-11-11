@@ -26,10 +26,14 @@ form {
     margin: auto;
 }
 
-#reponseConcours {
+#infos-epreuves-concours {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.p-t-b-10 {
+    padding: 10px 0;
 }
 
 div {

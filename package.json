@@ -1,7 +1,7 @@
 {
   "name": "concours-poney",
   "version": "1.0.0",
-  "description": "Application d'alerting en cas de places disponible dans un concours de la FFE",
+  "description": "Application d'alerting en cas de places disponibles dans un concours de la FFE",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",

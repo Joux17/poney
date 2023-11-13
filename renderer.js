@@ -37,7 +37,7 @@ async function afficherEpreuves(concours, epreuvesSouhaitees) {
         let epreuve = epreuvesConcours[parseInt(numeroEpreuveSouhaitee, 10) - 1];
         if(epreuve == null || epreuve == undefined) {
             arreterRequete();
-            ouvrirFenetreAvertissement("Etes-vous sur de l'épreuve renseignée ?");
+            ouvrirFenetreAvertissement("Etes-vous sûr de l'épreuve renseignée ?");
             return;
         }
         

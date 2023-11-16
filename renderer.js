@@ -105,14 +105,6 @@ function ouvrirFenetreAvertissement(message) {
 function afficherNotificationPlace(concours, numeroEpreuveSouhaitee, url) {
     ipcRenderer.send("notification-bureau", concours, numeroEpreuveSouhaitee, url);
 }
-//     const NOTIFICATION_TITLE = `Concours Poney ${concours}`;
-//     const NOTIFICATION_BODY = `Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`;
-//     const notification = new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY, icon: "./poney.ico" });
-//     notification.onclick = function(){
-//         console.log("Notification cliquée");
-//     };
-// }
-
 function allumerLed() {
     document.getElementById('led-red').style.display = 'none';
     document.getElementById('led-green').style.display = 'block';

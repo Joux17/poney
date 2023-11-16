@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, Notification, shell } = require("electron");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
@@ -43,14 +43,32 @@ app.on("window-all-closed", () => {
 });
 
 // Déclenche l'action quand le renderer.js émet l'événement "place-disponible"
-ipcMain.on("place-disponible", (_, url, numeroEpreuve) => {
-	shell.openExternal(url);
+ipcMain.on("place-disponible", (_, url, numeroEpreuve, navigateurActivee) => {
+	if(navigateurActivee) {
+		ouvrirDansLeNavigateur(url);
+	}
 	envoiMail(url, numeroEpreuve);
 });
 
 ipcMain.on("ouvrir-avertissement", (_, message) => {
 	ouvrirFenetreAvertissement(message);
 });
+
+ipcMain.on("notification-bureau", (_, concours, numeroEpreuveSouhaitee, url) => {
+	const NOTIFICATION_TITLE = `Concours Poney ${concours}`;
+    const NOTIFICATION_BODY = `Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`;
+    const notification = new Notification({
+		title: NOTIFICATION_TITLE, 
+		body: NOTIFICATION_BODY, 
+		icon: "./poney.ico" 
+	});
+
+	notification.show();
+
+    notification.on("click",(_) => {
+        ouvrirDansLeNavigateur(url);
+    });
+})
 
 function envoiMail(url, numeroEpreuve) {
 	if(process.env.DESTINATAIRE == undefined) {
@@ -85,4 +103,8 @@ function ouvrirFenetreAvertissement(message) {
 		title: "Avertissement",
 		message,
 	});
+}
+
+function ouvrirDansLeNavigateur(url) {
+	shell.openExternal(url); // Ouvre l'url dans un navigateur
 }

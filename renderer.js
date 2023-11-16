@@ -54,6 +54,8 @@ async function afficherEpreuves(concours, epreuvesSouhaitees) {
         ) {
             const nomConcours = documentConcours.getElementsByClassName("boite TEnteteConcours")[0].getElementsByClassName("top")[0].getElementsByClassName("left")[0].innerText.split('- ').pop()
 
+            const navigateurActivee = document.querySelector('#navigateur').checked;
+
             const notificationActivee = document.querySelector('#notification').checked;
 
             const envoiMailActive = document.querySelector('#envoiMail').checked;
@@ -61,11 +63,11 @@ async function afficherEpreuves(concours, epreuvesSouhaitees) {
 			ouvrirFenetreAvertissement(`Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`);
 
             if (envoiMailActive) {
-                ipcRenderer.send("place-disponible", url, numeroEpreuveSouhaitee); // Permet d'envoyer un 'event' avec un contenu au `main.js` afin de déclencher l'action d'envoi de mail
+                ipcRenderer.send("place-disponible", url, numeroEpreuveSouhaitee, navigateurActivee); // Permet d'envoyer un 'event' avec un contenu au `main.js` afin de déclencher l'action d'envoi de mail
             }
 
             if (notificationActivee) {
-                afficherNotificationPlace(nomConcours, numeroEpreuveSouhaitee);
+                afficherNotificationPlace(nomConcours, numeroEpreuveSouhaitee, url);
             }
 
             arreterRequete();
@@ -100,11 +102,16 @@ function ouvrirFenetreAvertissement(message) {
 }
 
 // Permet l'affichage d'une notification OS
-function afficherNotificationPlace(concours, numeroEpreuveSouhaitee) {
-    const NOTIFICATION_TITLE = `Concours Poney ${concours}`;
-    const NOTIFICATION_BODY = `Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`;
-    new window.Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY });
+function afficherNotificationPlace(concours, numeroEpreuveSouhaitee, url) {
+    ipcRenderer.send("notification-bureau", concours, numeroEpreuveSouhaitee, url);
 }
+//     const NOTIFICATION_TITLE = `Concours Poney ${concours}`;
+//     const NOTIFICATION_BODY = `Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`;
+//     const notification = new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY, icon: "./poney.ico" });
+//     notification.onclick = function(){
+//         console.log("Notification cliquée");
+//     };
+// }
 
 function allumerLed() {
     document.getElementById('led-red').style.display = 'none';

@@ -33,9 +33,8 @@ async function afficherEpreuves(concours, epreuvesSouhaitees) {
         
         afficherPlacesConcours(document, numeroEpreuveSouhaitee, placesRestantes);
         
-        if(!isNaN(parseInt(placesRestantes)) && placesRestantes !== 0) {
+        if(!isNaN(parseInt(placesRestantes)) && parseInt(placesRestantes) !== 0) {
             alert(`Place disponible pour l'épreuve ${numeroEpreuveSouhaitee}`);
-            // shell.openExternal("http://www.google.com")
             clearInterval(intervalId);
         }
     }

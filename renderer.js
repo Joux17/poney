@@ -50,7 +50,7 @@ async function afficherEpreuves(concours, epreuvesSouhaitees) {
         
 
         if(!isNaN(parseInt(placesRestantes)) 
-            && placesRestantes !== 0
+            && parseInt(placesRestantes) !== 0
         ) {
             const nomConcours = documentConcours.getElementsByClassName("boite TEnteteConcours")[0].getElementsByClassName("top")[0].getElementsByClassName("left")[0].innerText.split('- ').pop()
 
